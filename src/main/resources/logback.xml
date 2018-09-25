@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <appender name="FILE-AUDIT"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/opt/webhook/remittance/log/remittance.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{ISO8601} %-5level [%thread] %logger{10}[%M:%L] - %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>/opt/webhook/remittance/log/remittance.log.%d{yyyy-MM-dd}.%i.gz
+            </fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE-AUDIT"/>
+    </root>
+</configuration>
