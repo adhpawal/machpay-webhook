@@ -18,6 +18,8 @@ public interface EventDao extends CrudDao<Event, UUID> {
 
     Optional<Event> findLatestEventByPersistedObjectId(String persistedObjectId, Long compnayId);
 
+    List<Event> findPendingEventByPersistedObjectId(String persistedObjectId);
+
     List<Event> findAllPendingEvent();
 
 }

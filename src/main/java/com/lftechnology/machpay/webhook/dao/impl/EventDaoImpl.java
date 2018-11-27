@@ -58,4 +58,11 @@ public class EventDaoImpl extends BaseDao<Event, UUID> implements EventDao {
             return Optional.empty();
         }
     }
+
+    @Override
+    public List<Event> findPendingEventByPersistedObjectId(String persistedObjectId) {
+        TypedQuery<Event> query = em.createQuery("select e from Event e where persistedObjectId= :persistedObjectId and e.isExpired =false", Event.class);
+        query.setParameter("persistedObjectId", persistedObjectId);
+        return query.getResultList();
+    }
 }

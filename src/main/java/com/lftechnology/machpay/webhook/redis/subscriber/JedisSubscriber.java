@@ -3,7 +3,6 @@ package com.lftechnology.machpay.webhook.redis.subscriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lftechnology.machpay.common.dto.event.SubscriptionEvent;
 import com.lftechnology.machpay.redis.RedisFactory;
-import com.lftechnology.machpay.webhook.entity.Event;
 import com.lftechnology.machpay.webhook.service.ConfigService;
 import com.lftechnology.machpay.webhook.service.IncomingEventService;
 import org.slf4j.Logger;
@@ -13,7 +12,10 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import javax.annotation.PreDestroy;
-import javax.ejb.*;
+import javax.ejb.Asynchronous;
+import javax.ejb.Singleton;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.io.IOException;
 
@@ -61,8 +63,8 @@ public class JedisSubscriber {
                 LOGGER.info("#onSubscribe ChannelName : {}", channel);
                 Jedis jedis=null;
                 try{
-                    jedis = RedisFactory.getInstance().getJedisPool().getResource();
-                    while (jedis.llen(channel) != 0) {
+                    jedis = jedisPool.getResource();
+                    while (jedis.llen(channel+EVENTS) > 0) {
                         String result = jedis.rpop(channel+EVENTS);
                         LOGGER.info("#onSubscribe ChannelName : {} Queued Message : {}", channel, result);
                         try {
@@ -76,7 +78,6 @@ public class JedisSubscriber {
                     if(jedis!=null)
                         jedis.close();
                 }
-
             }
 
             @Override
@@ -98,7 +99,7 @@ public class JedisSubscriber {
                     Thread.sleep(10);
                     Jedis jedisClient=null;
                     try {
-                        jedisClient = RedisFactory.getInstance().getJedisPool().getResource();
+                        jedisClient = jedisPool.getResource();
                         String messageFromStorage = jedisClient.lpop(channel+EVENTS);
                         if(messageFromStorage!=null){
                             processRequest(messageFromStorage);
@@ -118,7 +119,7 @@ public class JedisSubscriber {
             public void run() {
                 try {
                     LOGGER.info("JedisSubscriber#setupSubscriber Subscription Thread");
-                    Jedis jedis = RedisFactory.getInstance().getJedisPool().getResource();
+                    Jedis jedis = jedisPool.getResource();
                     LOGGER.info("JedisSubscriber#setupSubscriber Subscription Thread :{}", configService.getChannelName());
                     jedis.subscribe(jedisPubSub, configService.getChannelName());
                     jedis.quit();
@@ -139,7 +140,6 @@ public class JedisSubscriber {
         try {
             eventDto = mapper.readValue(request, SubscriptionEvent.class);
             incomingEventService.registerEvent(eventDto);
-            setupSubscriber();
         } catch (IOException e) {
             LOGGER.error("JedisSubscriber#processRequest IOException When Parsing Incoming Request : {}", request);
         }

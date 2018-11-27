@@ -1,6 +1,7 @@
 package com.lftechnology.machpay.webhook.service.impl;
 
 import com.lftechnology.machpay.common.exception.BadRequestException;
+import com.lftechnology.machpay.common.util.DateUtil;
 import com.lftechnology.machpay.webhook.dao.EventDao;
 import com.lftechnology.machpay.webhook.entity.Event;
 import com.lftechnology.machpay.webhook.service.EventService;
@@ -8,6 +9,8 @@ import com.lftechnology.machpay.webhook.service.IncomingEventService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +30,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public void save(Event event) {
         eventDao.save(event);
+    }
+
+    @Override
+    public void update(Event event) {
+        eventDao.update(event);
     }
 
     @Override
@@ -53,10 +61,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<Event> findAllByPersistedObjectId(String persistedObjectId) {
+        return eventDao.findPendingEventByPersistedObjectId(persistedObjectId);
+    }
+
+    @Override
     public void rerunPendingEvents(){
         List<Event> events = eventDao.findAllPendingEvent();
         events.forEach(event->{
-            incomingEventService.triggerSubscription(event, event.getMtoId());
+                incomingEventService.triggerSubscription(event, event.getMtoId());
         });
     }
 }

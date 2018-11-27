@@ -13,6 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.12</junit.version>
+        <version.thorntail>2.2.1.Final</version.thorntail>
         <version.wildfly.swarm>2017.10.0</version.wildfly.swarm>
         <javaee.version>7.0</javaee.version>
         <slf4j.api.version>1.7.25</slf4j.api.version>
@@ -25,15 +26,15 @@
         <wildfly.plugin.version>1.1.0.Final</wildfly.plugin.version>
         <jackson.annotations.version>2.8.4</jackson.annotations.version>
         <org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
-        <version.postgresql>42.1.4</version.postgresql>
+        <version.postgresql>42.2.2</version.postgresql>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.wildfly.swarm</groupId>
-                <artifactId>bom-all</artifactId>
-                <version>${version.wildfly.swarm}</version>
+                <groupId>io.thorntail</groupId>
+                <artifactId>bom</artifactId>
+                <version>${version.thorntail}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -48,23 +49,23 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>datasources</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>jpa</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>cdi</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>ejb</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wildfly.swarm</groupId>
+            <groupId>io.thorntail</groupId>
             <artifactId>jaxrs</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
@@ -167,15 +168,20 @@
             <version>1.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.3.0</version>
+        </dependency>
 
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.wildfly.swarm</groupId>
-                <artifactId>wildfly-swarm-plugin</artifactId>
-                <version>${version.wildfly.swarm}</version>
+                <groupId>io.thorntail</groupId>
+                <artifactId>thorntail-maven-plugin</artifactId>
+                <version>${version.thorntail}</version>
                 <executions>
                     <execution>
                         <goals>

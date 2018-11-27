@@ -2,7 +2,7 @@
 <configuration debug="true">
     <appender name="FILE-AUDIT"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/webhook/remittance/log/remittance.log</file>
+        <file>/home/eyeshield/remittance.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %d{ISO8601} %-5level [%thread] %logger{10}[%M:%L] - %msg%n

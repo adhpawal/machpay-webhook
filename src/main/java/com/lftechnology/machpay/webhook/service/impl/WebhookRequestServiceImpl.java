@@ -17,7 +17,6 @@ import com.lftechnology.machpay.webhook.service.ConfigService;
 import com.lftechnology.machpay.webhook.service.WebhookHttpService;
 import com.lftechnology.machpay.webhook.service.WebhookRequestService;
 import com.lftechnology.machpay.webhook.util.EncryptUtils;
-import job.WebhookTriggerJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +47,6 @@ public class WebhookRequestServiceImpl implements WebhookRequestService {
 
     @Inject
     private WebhookHttpService webhookHttpService;
-
-    @Inject
-    private WebhookTriggerJob webhookTriggerJob;
 
     @Inject
     private ConfigService configService;
@@ -99,8 +95,6 @@ public class WebhookRequestServiceImpl implements WebhookRequestService {
             } else {
                 if(Duration.between(event.getCreatedAt(), LocalDateTime.now()).toHours() > 72){
                     event.setExpired(Boolean.TRUE);
-                }else{
-                    webhookTriggerJob.initialize(webhookRequestDto);
                 }
             }
         }else{

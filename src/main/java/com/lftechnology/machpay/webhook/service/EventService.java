@@ -12,11 +12,15 @@ public interface EventService {
 
     void save(Event event);
 
+    void update(Event event);
+
     List<Event> findAllByCompany(Long companyId);
 
     Event findByIdAndCompany(UUID eventId, Long companyId);
 
     Event getLatestEvent(String persistedObjectId, Long companyId);
+
+    List<Event> findAllByPersistedObjectId(String persistedObjectId);
 
     void rerunPendingEvents();
 }
